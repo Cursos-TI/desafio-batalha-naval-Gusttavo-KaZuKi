@@ -1,92 +1,131 @@
 #include <stdio.h>
 
-#define TAM 10
-
 int main() {
-    int tab[TAM][TAM] = {0};
+    // Representar tabuleiro usando matriz 10x10, considerando 0 como água
+    int tabuleiro[10][10] = {0};
+    int tamanho_navio = 3;
 
-    // Matrizes de habilidades EXATAMENTE como você enviou
-    // 3 linhas × 5 colunas
+    // Identificação das linhas e colunas do tabuleiro
+    char linhas[10]  = {'A','B','C','D','E','F','G','H','I','J'};
+    int colunas[10]  = {1,2,3,4,5,6,7,8,9,10};
 
-    // CONE = número 1 no tabuleiro
-    int cone[3][5] = {
+    // Vetores representando navios horizontal e vertical
+    int navio_horizontal[3] = {3, 3, 3};
+    int navio_vertical[3]   = {3, 3, 3};
+
+    // Posições iniciais dos navios horizontal e vertical
+    int linha_h = 2, coluna_h = 4;
+    int linha_v = 5, coluna_v = 7;
+
+    // Coloca navio horizontal
+    for (int i = 0; i < tamanho_navio; i++) {
+        tabuleiro[linha_h][coluna_h + i] = navio_horizontal[i];
+    }
+
+    // Coloca navio vertical
+    for (int i = 0; i < tamanho_navio; i++) {
+        tabuleiro[linha_v + i][coluna_v] = navio_vertical[i];
+    }
+
+    // Coloca navio diagonal 1
+    int linha_d1 = 0, coluna_d1 = 0;
+    for (int i = 0; i < tamanho_navio; i++) {
+        tabuleiro[linha_d1 + i][coluna_d1 + i] = 3;
+    }
+
+    // Coloca navio diagonal 2
+    int linha_d2 = 0, coluna_d2 = 9;
+    for (int i = 0; i < tamanho_navio; i++) {
+        tabuleiro[linha_d2 + i][coluna_d2 - i] = 3;
+    }
+
+    // Habilidades
+    int cone[5][5] = {
         {0,0,1,0,0},
         {0,1,1,1,0},
-        {1,1,1,1,1}
+        {1,1,1,1,1},
+        {0,0,0,0,0},
+        {0,0,0,0,0}
     };
 
-    // CRUZ = número 3 no tabuleiro
-    int cruz[3][5] = {
-        {0,0,3,0,0},
-        {3,3,3,3,3},
-        {0,0,3,0,0}
+    int cruz[5][5] = {
+        {0,0,7,0,0},
+        {7,7,7,7,7},
+        {0,0,7,0,0},
+        {0,0,0,0,0},
+        {0,0,0,0,0}
     };
 
-    // OCTAEDRO = número 5 no tabuleiro
-    int octaedro[3][5] = {
+    int octaedro[5][5] = {
         {0,0,5,0,0},
         {0,5,5,5,0},
-        {0,0,5,0,0}
+        {0,0,5,0,0},
+        {0,0,0,0,0},
+        {0,0,0,0,0}
     };
 
-    // Mesmas posições anteriores
-    int origem_cone_l = 0, origem_cone_c = 2;   // CONE
-    int origem_cruz_l = 2, origem_cruz_c = 6;   // CRUZ
-    int origem_octa_l = 5, origem_octa_c = 2;   // OCTAEDRO
+    // ORIGEM DAS HABILIDADES (CENTRO)
+    int ox_cone = 2, oy_cone = 2;
+    int ox_cruz = 3, oy_cruz = 5;
+    int ox_octa = 7, oy_octa = 2;
 
-    int r, c;
-
-    // --- Aplicar CONE ---
-    for (r = 0; r < 3; r++) {
-        for (c = 0; c < 5; c++) {
-            if (cone[r][c] != 0) {
-                int dl = origem_cone_l + r;
-                int dc = origem_cone_c + c - 2; // centralizar (coluna do meio = origem)
-                if (dl >= 0 && dl < TAM && dc >= 0 && dc < TAM)
-                    tab[dl][dc] = 1;
+    // Coloca CONE
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (cone[i][j] != 0) {
+                int lx = ox_cone + i - 2;
+                int cy = oy_cone + j - 2;
+                if (lx >= 0 && lx < 10 && cy >= 0 && cy < 10)
+                    tabuleiro[lx][cy] = cone[i][j];
             }
         }
     }
 
-    // --- Aplicar CRUZ ---
-    for (r = 0; r < 3; r++) {
-        for (c = 0; c < 5; c++) {
-            if (cruz[r][c] != 0) {
-                int dl = origem_cruz_l + r;
-                int dc = origem_cruz_c + c - 2;
-                if (dl >= 0 && dl < TAM && dc >= 0 && dc < TAM)
-                    tab[dl][dc] = 3;
+    // Coloca CRUZ
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (cruz[i][j] != 0) {
+                int lx = ox_cruz + i - 2;
+                int cy = oy_cruz + j - 2;
+                if (lx >= 0 && lx < 10 && cy >= 0 && cy < 10)
+                    tabuleiro[lx][cy] = cruz[i][j];
             }
         }
     }
 
-    // --- Aplicar OCTAEDRO ---
-    for (r = 0; r < 3; r++) {
-        for (c = 0; c < 5; c++) {
-            if (octaedro[r][c] != 0) {
-                int dl = origem_octa_l + r;
-                int dc = origem_octa_c + c - 2;
-                if (dl >= 0 && dl < TAM && dc >= 0 && dc < TAM)
-                    tab[dl][dc] = 5;
+    // Coloca OCTAEDRO
+    for (int i = 0; i < 5; i++) {
+        for (int j = 0; j < 5; j++) {
+            if (octaedro[i][j] != 0) {
+                int lx = ox_octa + i - 2;
+                int cy = oy_octa + j - 2;
+                if (lx >= 0 && lx < 10 && cy >= 0 && cy < 10)
+                    tabuleiro[lx][cy] = octaedro[i][j];
             }
         }
     }
 
-    // --- Imprimir TABULEIRO ---
-    printf("     ");
-    for (int i = 1; i <= 10; i++)
-        printf("%2d ", i);
+    // EXIBIÇÃO
+    printf("\n===== BATALHA NAVAL — TABULEIRO 10x10 =====\n\n");
+
+    printf("   ");
+    for (int c = 0; c < 10; c++) printf("%2d ", colunas[c]);
     printf("\n");
 
-    char letras[] = "ABCDEFGHIJ";
-
-    for (int i = 0; i < TAM; i++) {
-        printf("%c   ", letras[i]);
-        for (int j = 0; j < TAM; j++) {
-            printf("%2d ", tab[i][j]);
+    for (int l = 0; l < 10; l++) {
+        printf("%c  ", linhas[l]);
+        for (int c = 0; c < 10; c++) {
+            printf("%2d ", tabuleiro[l][c]);
         }
         printf("\n");
     }
+
+    printf("\nLegenda:\n");
+    printf("0 = água\n");
+    printf("3 = navio\n");
+    printf("1 = cone\n");
+    printf("7 = cruz\n");
+    printf("5 = octaedro\n\n");
 
     return 0;
 }
