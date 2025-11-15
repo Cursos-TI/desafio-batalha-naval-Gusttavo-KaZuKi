@@ -1,10 +1,10 @@
 #include <stdio.h>
 
 int main() {
-    // Representar tabuleiro usando matriz 10x10, considerando 0 como a água
+    // Representar tabuleiro usando matriz 10x10, considerando 0 como água
     int tabuleiro[10][10] = {0};
 
-    // Definir tamanho dos navios
+    // Tamanho fixo do navio
     int tamanho_navio = 3;
 
     // Identificação das linhas e colunas do tabuleiro
@@ -15,42 +15,52 @@ int main() {
     int navio_horizontal[3] = {3, 3, 3};
     int navio_vertical[3] = {3, 3, 3};
 
-    // Coordenadas iniciais dos navios
-    int linha_h = 2, coluna_h = 4; // navio horizontal iniciando em (C,5)
-    int linha_v = 5, coluna_v = 7; // navio vertical iniciando em (F,8)
+    // Escolha das coordenadas iniciais
+    int linha_h = 2, coluna_h = 4; // navio horizontal
+    int linha_v = 5, coluna_v = 7; // navio vertical
 
-    // Posicionar navio horizontal (3 para direita)
+    // Posicionar navio horizontal (para a direita)
     for (int i = 0; i < tamanho_navio; i++) {
-        tabuleiro[linha_h][coluna_h + i] = 3;
+        tabuleiro[linha_h][coluna_h + i] = navio_horizontal[i];
     }
 
-    // Posicionar navio vertical (3 para baixo)
+    // Posicionar navio vertical (para baixo)
     for (int i = 0; i < tamanho_navio; i++) {
-        tabuleiro[linha_v + i][coluna_v] = 3;
+        tabuleiro[linha_v + i][coluna_v] = navio_vertical[i];
     }
 
-    // Exibir tabuleiro na tela com linhas (A-J) e colunas (1-10)
+    // Navio diagonal 1
+    int linha_d1 = 0, coluna_d1 = 0;
+    for (int i = 0; i < tamanho_navio; i++) {
+        tabuleiro[linha_d1 + i][coluna_d1 + i] = 3;
+    }
+
+    // Navio diagonal 2
+    int linha_d2 = 0, coluna_d2 = 9;
+    for (int i = 0; i < tamanho_navio; i++) {
+        tabuleiro[linha_d2 + i][coluna_d2 - i] = 3;
+    }
+
+    // Exibir tabuleiro na tela
     printf("\n===== BATALHA NAVAL — TABULEIRO 10x10 =====\n\n");
 
-    // Imprime cabeçalho das colunas
-    printf("   "); // espaçamento inicial antes dos números das colunas
+    // Mostrar numeração das colunas (1 a 10)
+    printf("   ");
     for (int c = 0; c < 10; c++) {
-        // imprime colunas alinhadas com 3 espaços por célula
-        printf(" %2d", colunas[c]);
+        printf("%2d ", colunas[c]);
     }
     printf("\n");
 
-    // Imprime cada linha com sua letra e os valores do tabuleiro
-    for (int linha = 0; linha < 10; linha++) {
-        // imprime a letra da linha seguida de um separador
-        printf(" %c ", linhas[linha]);
-        for (int coluna = 0; coluna < 10; coluna++) {
-            printf(" %d ", tabuleiro[linha][coluna]);  // 0 = água, 3 = parte do navio
+    // Mostrar linhas e conteúdo do tabuleiro
+    for (int l = 0; l < 10; l++) {
+        printf("%c  ", linhas[l]); // letra A–J
+        for (int c = 0; c < 10; c++) {
+            printf("%2d ", tabuleiro[l][c]); // alinhado
         }
         printf("\n");
     }
 
-    printf("\nSeus navios foram posicionados!\n");
+    printf("\nNavios posicionados com sucesso!\n");
 
     return 0;
 }
