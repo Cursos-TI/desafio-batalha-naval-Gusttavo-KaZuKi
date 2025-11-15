@@ -1,66 +1,92 @@
 #include <stdio.h>
 
+#define TAM 10
+
 int main() {
-    // Representar tabuleiro usando matriz 10x10, considerando 0 como água
-    int tabuleiro[10][10] = {0};
+    int tab[TAM][TAM] = {0};
 
-    // Tamanho fixo do navio
-    int tamanho_navio = 3;
+    // Matrizes de habilidades EXATAMENTE como você enviou
+    // 3 linhas × 5 colunas
 
-    // Identificação das linhas e colunas do tabuleiro
-    char linhas[10]  = {'A','B','C','D','E','F','G','H','I','J'};
-    int colunas[10]  = {1,2,3,4,5,6,7,8,9,10};
+    // CONE = número 1 no tabuleiro
+    int cone[3][5] = {
+        {0,0,1,0,0},
+        {0,1,1,1,0},
+        {1,1,1,1,1}
+    };
 
-    // Vetores representando navios horizontal e vertical
-    int navio_horizontal[3] = {3, 3, 3};
-    int navio_vertical[3] = {3, 3, 3};
+    // CRUZ = número 3 no tabuleiro
+    int cruz[3][5] = {
+        {0,0,3,0,0},
+        {3,3,3,3,3},
+        {0,0,3,0,0}
+    };
 
-    // Escolha das coordenadas iniciais
-    int linha_h = 2, coluna_h = 4; // navio horizontal
-    int linha_v = 5, coluna_v = 7; // navio vertical
+    // OCTAEDRO = número 5 no tabuleiro
+    int octaedro[3][5] = {
+        {0,0,5,0,0},
+        {0,5,5,5,0},
+        {0,0,5,0,0}
+    };
 
-    // Posicionar navio horizontal (para a direita)
-    for (int i = 0; i < tamanho_navio; i++) {
-        tabuleiro[linha_h][coluna_h + i] = navio_horizontal[i];
+    // Mesmas posições anteriores
+    int origem_cone_l = 0, origem_cone_c = 2;   // CONE
+    int origem_cruz_l = 2, origem_cruz_c = 6;   // CRUZ
+    int origem_octa_l = 5, origem_octa_c = 2;   // OCTAEDRO
+
+    int r, c;
+
+    // --- Aplicar CONE ---
+    for (r = 0; r < 3; r++) {
+        for (c = 0; c < 5; c++) {
+            if (cone[r][c] != 0) {
+                int dl = origem_cone_l + r;
+                int dc = origem_cone_c + c - 2; // centralizar (coluna do meio = origem)
+                if (dl >= 0 && dl < TAM && dc >= 0 && dc < TAM)
+                    tab[dl][dc] = 1;
+            }
+        }
     }
 
-    // Posicionar navio vertical (para baixo)
-    for (int i = 0; i < tamanho_navio; i++) {
-        tabuleiro[linha_v + i][coluna_v] = navio_vertical[i];
+    // --- Aplicar CRUZ ---
+    for (r = 0; r < 3; r++) {
+        for (c = 0; c < 5; c++) {
+            if (cruz[r][c] != 0) {
+                int dl = origem_cruz_l + r;
+                int dc = origem_cruz_c + c - 2;
+                if (dl >= 0 && dl < TAM && dc >= 0 && dc < TAM)
+                    tab[dl][dc] = 3;
+            }
+        }
     }
 
-    // Navio diagonal 1
-    int linha_d1 = 0, coluna_d1 = 0;
-    for (int i = 0; i < tamanho_navio; i++) {
-        tabuleiro[linha_d1 + i][coluna_d1 + i] = 3;
+    // --- Aplicar OCTAEDRO ---
+    for (r = 0; r < 3; r++) {
+        for (c = 0; c < 5; c++) {
+            if (octaedro[r][c] != 0) {
+                int dl = origem_octa_l + r;
+                int dc = origem_octa_c + c - 2;
+                if (dl >= 0 && dl < TAM && dc >= 0 && dc < TAM)
+                    tab[dl][dc] = 5;
+            }
+        }
     }
 
-    // Navio diagonal 2
-    int linha_d2 = 0, coluna_d2 = 9;
-    for (int i = 0; i < tamanho_navio; i++) {
-        tabuleiro[linha_d2 + i][coluna_d2 - i] = 3;
-    }
-
-    // Exibir tabuleiro na tela
-    printf("\n===== BATALHA NAVAL — TABULEIRO 10x10 =====\n\n");
-
-    // Mostrar numeração das colunas (1 a 10)
-    printf("   ");
-    for (int c = 0; c < 10; c++) {
-        printf("%2d ", colunas[c]);
-    }
+    // --- Imprimir TABULEIRO ---
+    printf("     ");
+    for (int i = 1; i <= 10; i++)
+        printf("%2d ", i);
     printf("\n");
 
-    // Mostrar linhas e conteúdo do tabuleiro
-    for (int l = 0; l < 10; l++) {
-        printf("%c  ", linhas[l]); // letra A–J
-        for (int c = 0; c < 10; c++) {
-            printf("%2d ", tabuleiro[l][c]); // alinhado
+    char letras[] = "ABCDEFGHIJ";
+
+    for (int i = 0; i < TAM; i++) {
+        printf("%c   ", letras[i]);
+        for (int j = 0; j < TAM; j++) {
+            printf("%2d ", tab[i][j]);
         }
         printf("\n");
     }
-
-    printf("\nNavios posicionados com sucesso!\n");
 
     return 0;
 }
